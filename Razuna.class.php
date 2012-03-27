@@ -27,13 +27,18 @@
  *
  * HISTORY:
  * Date US Format		User					Note
- * 2009/11/01			SÃ©bastien Massiaux		Initial Library
+ * 2009/11/01			Sebastien Massiaux		Initial Library
  * 2010/01/16			Christof Dorner			Refactored Library
  * 2011/01/19			Nitai Aventaggiato		Updated IDs to string for 1.4.2
  * 2011/06/27			Darcy W. Christ 		Added getAssetByID, refactored 					
  												RazunaAsset object for ease of use and complete data returned by API
+ * 2012/03/27           Tapan                   Modified GetAssetByID class and smaller modification
  *
-
+ * 
+ * Please note that as of March 28th we have a new API version out. The new version supports JSON, JSONP and WDDX (XML)
+ * and is based on REST only. Thus, we are looking for someone to update this class to the latest API.
+ * Documentation for the new API is at: http://wiki.razuna.com/
+ *
  */
 
 class Razuna {
@@ -331,7 +336,8 @@ class Razuna {
         //print $response;
         if ($xml_result->responsecode == 0) {
             foreach ($xml_result->listassets->asset as $xml_asset) {
-                print_f($xml_result->listassets->asset);
+                // print_f has been commented //added by tapan
+                //print_f($xml_result->listassets->asset);
                 $asset = new RazunaAsset($xml_asset);
                 $assets[] = $asset;
             }
@@ -864,6 +870,7 @@ class RazunaFolder {
 
 class RazunaAsset {
 
+    public $formats;
     public $id;
     public $kind;
     public $filename;
@@ -877,20 +884,29 @@ class RazunaAsset {
     public $size;
     public $width;
     public $height;
-    //public $hasconvertedformats;
-    //public $convertedformats;
-    //public $metadata;
-    
+    public $hasconvertedformats;
+    public $convertedformats;
 
+    //public $metadata;
+    // modified function to return convertedformat asset as well. //added by tapan
     function __construct($xml_asset) {
-        
-        foreach($xml_asset as $property => $value) {
-            if(property_exists($this,$property)) {
-                $this->$property = (string)$value;
+        $this->formats = 0;
+        foreach ($xml_asset as $property => $value) {
+            if (property_exists($this, $property)) {
+                if ($this->formats == 1 && $property == 'convertedformats') {
+                    $array = array();
+                    foreach ($value->theformat as $values) {
+                        $array[] = $values;
+                    }
+                    $this->$property = (array) $array;                    
+                    continue;
+                }
+                if ($property == 'hasconvertedformats' && $value == 'true') {
+                    $this->formats = 1;
+                }
+                $this->$property = (string) $value;
             }
-            
         }
-        
     }
 
     public function isAudio() {
