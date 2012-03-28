@@ -3,6 +3,10 @@ Razuna PHP Library
 
 This is the official Razuna PHP Library. Use this to hook up your PHP code to the Razuna API.
 
+UPDATE
+======
+As of March 28th this library is being refactored to take advantage of the new Razuna API version 2. If you want to use the API1 then please use the class in the TAGS! 
+
 Documentation
 -------------
 
