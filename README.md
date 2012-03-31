@@ -1,11 +1,11 @@
-Razuna PHP Library
-==================
+Razuna PHP Library for API 2 !
+==============================
 
-This is the official Razuna PHP Library. Use this to hook up your PHP code to the Razuna API.
+This is the official Razuna PHP Library 2. Use this to hook up your PHP code to the Razuna API 2.
 
-UPDATE
-======
-As of March 28th this library is being refactored to take advantage of the new Razuna API version 2. If you want to use the API1 then please use the class in the TAGS! 
+IMPORTANT
+=========
+If you are looking for version 1 which used the Razuna API 1, then please take the one from the TAGS as the release and master branch use solely API 2!
 
 Documentation
 -------------
@@ -26,3 +26,26 @@ Documentation / Wiki
 --------------------
 
 Documentation / Wiki is available at [Razuna Documentation](http://wiki.razuna.com).
+
+Usage
+-----
+
+NOTE: You need to have the CURL module enabled in your PHP installation!
+
+// To getasset
+include_once 'Razuna.class.php';
+$host = 'localhost:8080';
+$api_key = '82B39A73A1C14B9A859FD265EC45BCED';
+$assetid = '2478925F65604A2D84A9495D0E2ABD6C';
+$assettype = 'img';
+
+$conn = new Razuna();
+$conn->connect($host, $api_key);
+
+$response = $conn->getasset($assetid, $assettype);
+// Note response will be in JSON format
+var_dump($response);
+
+Special Thank you
+-----------------
+Tapan Kumar Thapa for refactoring the PHP class for API2.
